@@ -19,7 +19,7 @@ module Idcf
         query = env.url.query
         query = add_query_param query, 'apikey',    api_key
         query = add_query_param query, 'response',  'json'
-        query = add_query_param query, 'signature', signature(env)
+        query = add_query_param query, 'signature', signature(query)
         env.url.query = query
 
         @app.call env
@@ -33,28 +33,44 @@ module Idcf
         query << "#{Faraday::Utils.escape key}=#{Faraday::Utils.escape value}"
       end
 
-      def signature(env)
+      def signature(query)
         Base64.strict_encode64(
           OpenSSL::HMAC.digest(
             OpenSSL::Digest::SHA1.new,
             secret_key,
-            signature_seed(env)
+            signature_seed(query)
           )
         )
       end
 
-      def signature_seed(env)
-        query = env.url.query&.downcase
+      def signature_seed(query)
+        query = query ? query.downcase : query
         raise InvalidParameter, 'Must be set command=...' if query.nil?
         query = URI.decode_www_form(query)
         command_check query
-        query.sort! { |x, y| x[0] <=> y [0] }
-        URI.encode_www_form(query).gsub('+', '%20').downcase
+        query = query.sort do |x, y|
+          x[0] <=> y[0]
+        end
+        signeture_seed_escape(URI.encode_www_form(query)).downcase
+      end
+
+      def signeture_seed_escape(query)
+        [
+          %w(+ %20),
+          %w(%2A *),
+          %w(%5B [),
+          %w(%5D ])
+        ].each do |list|
+          query = query.gsub(*list)
+        end
+        query
       end
 
       def command_check(query)
-        raise InvalidParameter, 'Must be set command=...' if
-          query.find { |x| x[0] == 'command' && x[1].present? }.nil?
+        list = query.find do |x|
+          x[0] == 'command' && x[1].present?
+        end
+        raise InvalidParameter, 'Must be set command=...' if list.nil?
       end
     end
   end
