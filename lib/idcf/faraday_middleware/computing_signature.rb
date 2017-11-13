@@ -44,23 +44,17 @@ module Idcf
       end
 
       def signature_seed(query)
-        query = query ? query.downcase : query
         raise InvalidParameter, 'Must be set command=...' if query.nil?
-        query = URI.decode_www_form(query)
+        query = URI.decode_www_form(query.downcase)
         command_check query
         query = query.sort do |x, y|
           x[0] <=> y[0]
         end
-        signeture_seed_escape(URI.encode_www_form(query)).downcase
+        signeture_seed_part_decode(URI.encode_www_form(query)).downcase
       end
 
-      def signeture_seed_escape(query)
-        [
-          %w(+ %20),
-          %w(%2A *),
-          %w(%5B [),
-          %w(%5D ])
-        ].each do |list|
+      def signeture_seed_part_decode(query)
+        PARTIALLY_DECODE.each do |list|
           query = query.gsub(*list)
         end
         query

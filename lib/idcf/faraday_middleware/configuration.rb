@@ -8,6 +8,12 @@ module Idcf
       EXPIRES          = 'Expired'.freeze
       SIGNATURE        = 'Signature'.freeze
       SIGNATURE_TTL    = 600
+      PARTIALLY_DECODE = [
+        %w(+ %20),
+        %w(%2A *),
+        %w(%5B [),
+        %w(%5D ])
+      ].freeze
     end
   end
 end
