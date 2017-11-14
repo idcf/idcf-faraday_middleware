@@ -41,6 +41,7 @@ Faraday::Request.register_middleware(
     faraday.request :signature, api_key: api_key, secret_key: secret_key
     faraday.response :json
     faraday.adapter Faraday.default_adapter
+    faraday.options.params_encoder = Faraday::FlatParamsEncoder
   end
 @connection.get '/client/api?command=listZones'
 ```
