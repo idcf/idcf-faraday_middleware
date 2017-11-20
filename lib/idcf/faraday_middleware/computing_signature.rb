@@ -16,8 +16,7 @@ module Idcf
       def call(env)
         raise InvalidKeys, errors.messages.to_s if invalid?
 
-        case env.method
-        when :get, :delete
+        if env.body.nil?
           env.url.query = make_get_params(env)
         else
           env.body = make_params_body(env)
