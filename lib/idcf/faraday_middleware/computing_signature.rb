@@ -16,16 +16,32 @@ module Idcf
       def call(env)
         raise InvalidKeys, errors.messages.to_s if invalid?
 
-        query = env.url.query
-        query = add_query_param query, 'apikey',    api_key
-        query = add_query_param query, 'response',  'json'
-        query = add_query_param query, 'signature', signature(query)
-        env.url.query = query
-
+        case env.method
+        when :get, :delete
+          env.url.query = make_get_params(env)
+        else
+          env.body = make_params_body(env)
+        end
         @app.call env
       end
 
       private
+
+      def make_params_body(env)
+        params = URI.decode_www_form(env.url.query)
+        params.concat(URI.decode_www_form(env.body))
+        params << ['apikey', api_key]
+        params << %w(response json)
+        params << ['signature', signature(URI.encode_www_form(params))]
+        URI.encode_www_form(params)
+      end
+
+      def make_get_params(env)
+        query = env.url.query
+        query = add_query_param query, 'apikey', api_key
+        query = add_query_param query, 'response', 'json'
+        add_query_param query, 'signature', signature(query)
+      end
 
       def add_query_param(query, key, value)
         query = query.to_s
