@@ -27,8 +27,6 @@ Or install it yourself as:
 ### Computing
 
 ```ruby
-require 'faraday'
-require 'faraday_middleware'
 require 'idcf/faraday_middleware'
 
 Faraday::Request.register_middleware(
@@ -49,8 +47,6 @@ Faraday::Request.register_middleware(
 ## ILB
 
 ```ruby
-require 'faraday'
-require 'faraday_middleware'
 require 'idcf/faraday_middleware'
 
 Faraday::Request.register_middleware(
@@ -70,8 +66,6 @@ Faraday::Request.register_middleware(
 ## DNS
 
 ```ruby
-require 'faraday'
-require 'faraday_middleware'
 require 'idcf/faraday_middleware'
 
 Faraday::Request.register_middleware(
@@ -91,8 +85,6 @@ Faraday::Request.register_middleware(
 ### Billing
 
 ```ruby
-require 'faraday'
-require 'faraday_middleware'
 require 'idcf/faraday_middleware'
 
 Faraday::Request.register_middleware(
@@ -112,8 +104,6 @@ Faraday::Request.register_middleware(
 ### Content Cache
 
 ```ruby
-require 'faraday'
-require 'faraday_middleware'
 require 'idcf/faraday_middleware'
 
 Faraday::Request.register_middleware(

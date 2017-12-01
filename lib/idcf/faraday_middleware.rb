@@ -1,5 +1,6 @@
 require 'base64'
 require 'faraday'
+require 'faraday_middleware'
 require 'active_support'
 require 'active_support/core_ext/class/attribute'
 require 'active_support/dependencies/autoload'
