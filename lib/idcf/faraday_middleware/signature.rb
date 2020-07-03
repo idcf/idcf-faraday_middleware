@@ -40,7 +40,7 @@ module Idcf
           env.method.to_s.upcase,
           env.url.path,
           api_key,
-          expires,
+          env[:request_headers][HEADER_EXPIRES],
           env.url.query.to_s.gsub('+', '%20')
         ].join("\n")
       end
