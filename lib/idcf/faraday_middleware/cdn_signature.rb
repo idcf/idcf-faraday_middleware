@@ -28,7 +28,7 @@ module Idcf
           env.method.to_s.upcase,
           api_key,
           secret_key,
-          expires,
+          env[:request_headers][EXPIRES],
           env.url.request_uri,
           env.body.to_s
         ].join("\n")
